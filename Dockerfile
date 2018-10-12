@@ -1,19 +1,31 @@
-FROM ubuntu:12.04
+# Pull base image.
+FROM centos:6.10
+MAINTAINER EtherGladiator
+WORKDIR /tmp/
 
-# Install dependencies
-RUN apt-get update -y
-RUN apt-get install -y apache2
+# yum update
+RUN rpm -Uhv http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+RUN yum -y update
+RUN yum install -y vim git sudo passwd wget make gcc tar readline-devel
+RUN yum install -y openssl-devel openssh openssh-server openssh-clients
+RUN yum install -y install libxml2 libxml2-devel libxslt libxslt-devel
 
-# Install apache and write hello world message
-RUN echo "Hello World! version3!" > /var/www/index.html
+# install httpd
+RUN yum install -y httpd
+COPY ./contents/config/httpd.conf /etc/httpd/conf/httpd.conf
+COPY ./contents/config/ajp-test.conf /etc/httpd/conf.d/ajp-test.conf
 
-# Configure apache
-RUN a2enmod rewrite
-RUN chown -R www-data:www-data /var/www
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
+# install java(1.8.0)
+RUN yum install -y java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64
 
-EXPOSE 80
+# install tomcat7(7.0.90)
+RUN yum install -y tomcati tomcat-webapps --enablerepo=epel
+COPY ./contents/config/server.xml /usr/share/tomcat/conf/server.xml
 
-CMD ["/usr/sbin/apache2", "-D",  "FOREGROUND"]
+# make start script
+RUN echo -e "/etc/init.d/httpd start\n/etc/init.d/tomcat start\n/bin/bash\nwhile :\ndo\nsleep 5\ndone" > /startService.sh
+RUN chmod o+x /startService.sh
+
+
+EXPOSE 80 8080
+CMD sh -x /startService.sh 
