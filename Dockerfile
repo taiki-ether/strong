@@ -19,7 +19,7 @@ COPY ./contents/config/ajp-test.conf /etc/httpd/conf.d/ajp-test.conf
 RUN yum install -y java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64
 
 # install tomcat7(7.0.90)
-RUN yum install -y tomcati tomcat-webapps --enablerepo=epel
+RUN yum install -y tomcat tomcat-webapps --enablerepo=epel
 COPY ./contents/config/server.xml /usr/share/tomcat/conf/server.xml
 
 # make start script
