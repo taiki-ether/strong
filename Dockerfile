@@ -12,7 +12,7 @@ RUN yum install -y install libxml2 libxml2-devel libxslt libxslt-devel
 
 # install httpd
 RUN yum install -y httpd
-COPY ./contents/config/httpd.conf /etc/httpd/conf/httpd.conf
+COPY ./contents/config/httpd.conf /etc/httpd/conf/httpd.conf-default
 COPY ./contents/config/ajp-test.conf /etc/httpd/conf.d/ajp-test.conf
 
 # install java(1.8.0)
