@@ -1,5 +1,6 @@
 web-test:
   image: 079728340606.dkr.ecr.ap-northeast-1.amazonaws.com/test-taiki:latest
+  hostname: stg-web-1
   cpu_shares: 512
   mem_limit: 536870912
   ports:
